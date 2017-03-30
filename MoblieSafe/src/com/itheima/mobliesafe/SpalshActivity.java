@@ -13,10 +13,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.TextView;
@@ -33,45 +32,13 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 
 public class SpalshActivity extends Activity {
 	
-    protected static final int MSG_UPDATE_DIALOG = 1;
-	protected static final int MSG_ENTER_HOME = 2;
-	protected static final int MSG_SERVER_ERROR = 3;
-	protected static final int MSG_URL_ERROR = 4;
-	protected static final int MSG_IO_ERROR = 5;
-	protected static final int MSG_JSON_ERROR = 6;
-	
-	private Handler handler = new Handler(){
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_UPDATE_DIALOG:
-				//弹出对话框
-				showdialog();
-				break;
-			case MSG_ENTER_HOME:
-				enterHome();
-				break;
-			case MSG_SERVER_ERROR:
-				//连接失败,服务器出现异常
-				Toast.makeText(getApplicationContext(), "服务器异常", Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_IO_ERROR:
-				Toast.makeText(getApplicationContext(), "亲,网络没有连接..", Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_URL_ERROR:
-				//方便我们后期定位异常
-				Toast.makeText(getApplicationContext(), "错误号:"+MSG_URL_ERROR, Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_JSON_ERROR:
-				Toast.makeText(getApplicationContext(), "错误号:"+MSG_JSON_ERROR, Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			}
-			
-		};
-	};
+	private static final int MSG_UPDATE_DIALOG = 1;
+	private static final int MSG_ENTER_HOME = 2;
+	private static final int MSG_SERVER_ERROR = 3;
+	private static final int MSG_URL_ERROR = 4;
+	private static final int MSG_IO_ERROR = 5;
+	private static final int MSG_JSON_ERROR = 6;
+	private int MSG_CURRENT = 0;
 	
 	@InjectView(R.id.tv_splash_versionname)
 	TextView tv_splash_versionname;
@@ -89,7 +56,8 @@ public class SpalshActivity extends Activity {
 		setContentView(R.layout.activity_spalsh);
 		ButterKnife.inject(this);
 		tv_splash_versionname.setText("版本号:" + getVersionName());
-		update();
+		new HttpTask().execute();//启动AsyncTask异步任务
+//		update();
 	}
 
 	/**
@@ -97,62 +65,54 @@ public class SpalshActivity extends Activity {
 	 */
 	private void update() {
 		// 1.连接服务器,查看是否有最新版本, 联网操作,耗时操作,4.0以后不允许在主线程中执行的,放到子线程中执行
-		new Thread() {
-			private int startTime;
-			public void run() {
-				Message message = Message.obtain();
-				// 在连接之前获取一个时间
-				startTime = (int) System.currentTimeMillis();
-				try {
-					// 1.1连接服务器
-					// 1.1.1设置连接路径
-					// http://192.168.56.1:8080/zhbj/abcdefg.html
-					// 1.1.2获取连接操作  
-					HttpResult httpResult = HttpHelper.get(HttpHelper.URL +"zhbj/abcdefg.html");
-					if (httpResult.getCode() == 200) {
-						// 连接成功,获取服务器返回的数据,code : 新版本的版本号 apkurl:新版本的下载路径  des:描述信息,告诉用户增加了哪些功能,修改那些bug 获取数据之前,服务器是如何封装数据xml json
-						System.out.println("连接成功.....");
-						// 获取服务器返回的流信息
-						// 将获取到的流信息转化成字符串
-						// 解析json数据
-						JSONObject jsonObject = new JSONObject(httpResult.getString());
-						// 获取数据
-						code = jsonObject.getString("code");
-						apkurl = jsonObject.getString("apkurl");
-						des = jsonObject.getString("des");
-						System.out.println("code:" + code + "   apkurl:" + apkurl + "   des:" + des);
-						// 1.2查看是否有最新版本
-						// 判断服务器返回的新版本版本号和当前应用程序的版本号是否一致,一致表示没有最新版本,不一致表示有最新版本
-						if (code.equals(getVersionName())) {
-							// 没有最新版本
-							message.what = MSG_ENTER_HOME;
-						} else {
-							// 有最新版本
-							// 2.弹出对话框,提醒用户更新版本
-							message.what = MSG_UPDATE_DIALOG;
-						}
-					} else {
-						// 连接失败  
-						System.out.println("连接失败.....");
-						message.what = MSG_SERVER_ERROR;
-					}
-				}catch (Exception e) {
-					e.printStackTrace();
-					message.what = MSG_JSON_ERROR;
-				}finally{//不管有没有异常都会执行  保障展示欢迎界面的2秒
-					//处理连接外网连接时间的问题
-					//在连接成功之后在去获取一个时间
-					int endTime = (int) System.currentTimeMillis();
-					//比较两个时间的时间差,如果小于两秒,睡两秒,大于两秒,不睡
-					int dTime = endTime-startTime;
-					if (dTime<2000) {
-						//睡两秒钟
-						SystemClock.sleep(2000-dTime);//始终都是睡两秒钟的时间
-					}
-					handler.sendMessage(message);
+		int	startTime = (int) System.currentTimeMillis();
+		try {
+			// 1.1连接服务器
+			// 1.1.1设置连接路径
+			// http://192.168.56.1:8080/zhbj/abcdefg.html
+			// 1.1.2获取连接操作  
+			HttpResult httpResult = HttpHelper.get(HttpHelper.URL +"zhbj/abcdefg.html");
+			if (httpResult.getCode() == 200) {
+				// 连接成功,获取服务器返回的数据,code : 新版本的版本号 apkurl:新版本的下载路径  des:描述信息,告诉用户增加了哪些功能,修改那些bug 获取数据之前,服务器是如何封装数据xml json
+				System.out.println("连接成功.....");
+				// 获取服务器返回的流信息
+				// 将获取到的流信息转化成字符串
+				// 解析json数据
+				JSONObject jsonObject = new JSONObject(httpResult.getString());
+				// 获取数据
+				code = jsonObject.getString("code");
+				apkurl = jsonObject.getString("apkurl");
+				des = jsonObject.getString("des");
+				System.out.println("code:" + code + "   apkurl:" + apkurl + "   des:" + des);
+				// 1.2查看是否有最新版本
+				// 判断服务器返回的新版本版本号和当前应用程序的版本号是否一致,一致表示没有最新版本,不一致表示有最新版本
+				if (code.equals(getVersionName())) {
+					// 没有最新版本
+					MSG_CURRENT = MSG_ENTER_HOME;
+				} else {
+					// 有最新版本
+					// 2.弹出对话框,提醒用户更新版本
+					MSG_CURRENT = MSG_UPDATE_DIALOG;
 				}
-			};
-		}.start();
+			} else {
+				// 连接失败  
+				System.out.println("连接失败.....");
+				MSG_CURRENT = MSG_SERVER_ERROR;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			MSG_CURRENT = MSG_JSON_ERROR;
+		}finally{//不管有没有异常都会执行  保障展示欢迎界面的2秒
+			//处理连接外网连接时间的问题
+			//在连接成功之后在去获取一个时间
+			int endTime = (int) System.currentTimeMillis();
+			//比较两个时间的时间差,如果小于两秒,睡两秒,大于两秒,不睡
+			int dTime = endTime-startTime;
+			if (dTime<2000) {
+				//睡两秒钟
+				SystemClock.sleep(2000-dTime);//始终都是睡两秒钟的时间
+			}
+		}
 	}
 
 	/**
@@ -266,11 +226,11 @@ public class SpalshActivity extends Activity {
 	protected void installAPK() {//参考视频   14.安装最新版本
 		/**
 		 *  <intent-filter>
-	            <action android:name="android.intent.action.VIEW" />
-	            <category android:name="android.intent.category.DEFAULT" />
-	            <data android:scheme="content" /> //content : 从内容提供者中获取数据  content://
-	            <data android:scheme="file" /> // file : 从文件中获取数据
-	            <data android:mimeType="application/vnd.android.package-archive" />
+	            <action android:name="android.intent.action.VIEW"/>
+	            <category android:name="android.intent.category.DEFAULT"/>
+	            <data android:scheme="content"/>//content : 从内容提供者中获取数据  content://
+	            <data android:scheme="file"/>// file : 从文件中获取数据
+	            <data android:mimeType="application/vnd.android.package-archive"/>
 	        </intent-filter>
 		 */
 		Intent intent = new Intent();
@@ -290,6 +250,77 @@ public class SpalshActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		enterHome();
+	}
+	
+	/**
+	 * 三个泛型的意义
+	 * 第一个泛型：doInBackground 里的参数类型
+	 * @author Administrator
+	 *
+	 */
+	class HttpTask extends AsyncTask<Void, Void, Void>{//参考视频智慧北京DAY06 03.网络缓存&AsyncTask的使用
+		
+		/**
+		 * 1.预加载，运行在主线程
+		 */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * 2.运行在子线程,运行在后台（核心方法），可以直接异步请求
+		 */
+		@Override
+		protected Void doInBackground(Void... params) {
+			update();
+			//publishProgress(values);进度更新调用 回调onProgressUpdate
+			return null;
+		}
+		
+		/**
+		 * 3.更新进度运行在主线程
+		 */
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			//更新进度条
+			super.onProgressUpdate(values);
+		}
+		
+		/**
+		 * 4.加载结束运行在主线程（核心方法）
+		 */
+		@Override
+		protected void onPostExecute(Void result) {
+			switch (MSG_CURRENT) {
+			case MSG_UPDATE_DIALOG:
+				//弹出对话框
+				showdialog();
+				break;
+			case MSG_ENTER_HOME:
+				enterHome();
+				break;
+			case MSG_SERVER_ERROR:
+				//连接失败,服务器出现异常
+				Toast.makeText(getApplicationContext(), "服务器异常", Toast.LENGTH_SHORT).show();
+				enterHome();
+				break;
+			case MSG_IO_ERROR:
+				Toast.makeText(getApplicationContext(), "亲,网络没有连接..", Toast.LENGTH_SHORT).show();
+				enterHome();
+				break;
+			case MSG_URL_ERROR:
+				//方便我们后期定位异常
+				Toast.makeText(getApplicationContext(), "错误号:"+MSG_URL_ERROR, Toast.LENGTH_SHORT).show();
+				enterHome();
+				break;
+			case MSG_JSON_ERROR:
+				Toast.makeText(getApplicationContext(), "错误号:"+MSG_JSON_ERROR, Toast.LENGTH_SHORT).show();
+				enterHome();
+				break;
+			}
+			super.onPostExecute(result);
+		}		
 	}
 	
 }
