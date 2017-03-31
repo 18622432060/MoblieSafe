@@ -25,6 +25,7 @@ import butterknife.InjectView;
 
 import com.itheima.mobliesafe.utils.HttpHelper;
 import com.itheima.mobliesafe.utils.HttpHelper.HttpResult;
+import com.itheima.mobliesafe.utils.PrefUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -57,7 +58,6 @@ public class SpalshActivity extends Activity {
 		ButterKnife.inject(this);
 		tv_splash_versionname.setText("版本号:" + getVersionName());
 		new HttpTask().execute();//启动AsyncTask异步任务
-//		update();
 	}
 
 	/**
@@ -273,7 +273,15 @@ public class SpalshActivity extends Activity {
 		 */
 		@Override
 		protected Void doInBackground(Void... params) {
-			update();
+			if(PrefUtils.getBoolean(getApplicationContext(), "update", true)){//判断设置里是否更新
+				update();
+			}else{
+			    //跳转到主界面
+	    	    //不能让主线程去睡两秒钟
+	    	    //主线程是有渲染界面的操作,主线程睡两秒钟就没有办法去渲染界面
+				SystemClock.sleep(2000);
+				MSG_CURRENT = MSG_ENTER_HOME;
+			}
 			//publishProgress(values);进度更新调用 回调onProgressUpdate
 			return null;
 		}
@@ -293,31 +301,31 @@ public class SpalshActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			switch (MSG_CURRENT) {
-			case MSG_UPDATE_DIALOG:
-				//弹出对话框
-				showdialog();
-				break;
-			case MSG_ENTER_HOME:
-				enterHome();
-				break;
-			case MSG_SERVER_ERROR:
-				//连接失败,服务器出现异常
-				Toast.makeText(getApplicationContext(), "服务器异常", Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_IO_ERROR:
-				Toast.makeText(getApplicationContext(), "亲,网络没有连接..", Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_URL_ERROR:
-				//方便我们后期定位异常
-				Toast.makeText(getApplicationContext(), "错误号:"+MSG_URL_ERROR, Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
-			case MSG_JSON_ERROR:
-				Toast.makeText(getApplicationContext(), "错误号:"+MSG_JSON_ERROR, Toast.LENGTH_SHORT).show();
-				enterHome();
-				break;
+				case MSG_UPDATE_DIALOG:
+					//弹出对话框
+					showdialog();
+					break;
+				case MSG_ENTER_HOME:
+					enterHome();
+					break;
+				case MSG_SERVER_ERROR:
+					//连接失败,服务器出现异常
+					Toast.makeText(getApplicationContext(), "服务器异常", Toast.LENGTH_SHORT).show();
+					enterHome();
+					break;
+				case MSG_IO_ERROR:
+					Toast.makeText(getApplicationContext(), "亲,网络没有连接..", Toast.LENGTH_SHORT).show();
+					enterHome();
+					break;
+				case MSG_URL_ERROR:
+					//方便我们后期定位异常
+					Toast.makeText(getApplicationContext(), "错误号:"+MSG_URL_ERROR, Toast.LENGTH_SHORT).show();
+					enterHome();
+					break;
+				case MSG_JSON_ERROR:
+					Toast.makeText(getApplicationContext(), "错误号:"+MSG_JSON_ERROR, Toast.LENGTH_SHORT).show();
+					enterHome();
+					break;
 			}
 			super.onPostExecute(result);
 		}		
