@@ -20,14 +20,14 @@ public class SettingActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 		ButterKnife.inject(this);
-		sv_setting_update.setTitle("提示更新");
+		//sv_setting_update.setTitle("提示更新");
 
 		//defValue : 缺省的值
 		if (PrefUtils.getBoolean(getApplicationContext(),"update", true)) {
-			sv_setting_update.setDes("打开提示更新");
+			//sv_setting_update.setDes("打开提示更新");
 			sv_setting_update.setChecked(true);	
 		}else{
-			sv_setting_update.setDes("关闭提示更新");
+			//sv_setting_update.setDes("关闭提示更新");
 			sv_setting_update.setChecked(false);	
 		}
 		
@@ -41,14 +41,14 @@ public class SettingActivity extends Activity {
 				//根据checkbox之前的状态来改变checkbox的状态
 				if (sv_setting_update.isChecked()) {
 					//关闭提示更新
-					sv_setting_update.setDes("关闭提示更新");
+					//sv_setting_update.setDes("关闭提示更新");
 					sv_setting_update.setChecked(false);
 					//保存状态
 					PrefUtils.setBoolean(getApplicationContext(), "update", false);
 					//edit.apply();//保存到文件中,但是仅限于9版本之上,9版本之下保存到内存中的
 				}else{
 					//打开提示更新
-					sv_setting_update.setDes("打开提示更新");
+					//sv_setting_update.setDes("打开提示更新");
 					sv_setting_update.setChecked(true);
 					//保存状态
 					PrefUtils.setBoolean(getApplicationContext(), "update", true);
