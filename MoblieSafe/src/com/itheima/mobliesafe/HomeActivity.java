@@ -112,17 +112,6 @@ public class HomeActivity extends Activity {
 
 	}
 	
-//	@InjectView(R.id.et_setpassword_password)
-//	EditText et_setpassword_password ;
-//	
-//	@InjectView(R.id.et_setpassword_confrim)
-//	EditText et_setpassword_confrim ;
-//	
-//	@InjectView(R.id.btn_ok)
-//	Button btn_ok;
-//	@InjectView(R.id.btn_cancle)
-//	Button btn_cancle;
-	
 	/**
 	 * 设置密码对话框
 	 */
@@ -184,7 +173,7 @@ public class HomeActivity extends Activity {
 		dialog.show();
 		WindowManager m = getWindowManager();    
 		Display d = m.getDefaultDisplay();  //为获取屏幕宽、高     
-		dialog.getWindow().setLayout((int) (d.getWidth() * 0.8), LinearLayout.LayoutParams.WRAP_CONTENT);    
+		dialog.getWindow().setLayout((int) (d.getWidth() * 0.9), LinearLayout.LayoutParams.WRAP_CONTENT);    
 	}
 	
 	int count = 0;
@@ -236,8 +225,8 @@ public class HomeActivity extends Activity {
 				//4.判断两个密码是否一致
 				if (MD5Util.passwordMD5(password).equals(sp_password)) {
 					//跳转到到手机防盗界面
-//					Intent intent = new Intent(HomeActivity.this,LostfindActivity.class);
-//					startActivity(intent);
+					Intent intent = new Intent(HomeActivity.this,LostfindActivity.class);
+					startActivity(intent);
 					//隐藏对话框
 					dialog.dismiss();
 					//提醒用户
@@ -265,7 +254,7 @@ public class HomeActivity extends Activity {
 		dialog.show();
 		WindowManager m = getWindowManager();    
 		Display d = m.getDefaultDisplay();  //为获取屏幕宽、高     
-		dialog.getWindow().setLayout((int) (d.getWidth() * 0.8), LinearLayout.LayoutParams.WRAP_CONTENT);    
+		dialog.getWindow().setLayout((int) (d.getWidth() * 0.9), LinearLayout.LayoutParams.WRAP_CONTENT);    
 	}
 	
 }
