@@ -7,7 +7,7 @@ import butterknife.ButterKnife.Finder;
 public class HomeActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.HomeActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131230722, "field 'gv_home_gridview'");
+    view = finder.findRequiredView(source, 2131296258, "field 'gv_home_gridview'");
     target.gv_home_gridview = (android.widget.GridView) view;
   }
 

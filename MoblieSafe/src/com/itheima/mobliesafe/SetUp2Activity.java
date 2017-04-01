@@ -45,6 +45,7 @@ public class SetUp2Activity extends SetUpBaseActivity {
 		Intent intent = new Intent(this, SetUp3Activity.class);
 		startActivity(intent);
 		finish();
+		overridePendingTransition(R.anim.setup_enter_next, R.anim.setup_exit_next);
 	}
 
 	@Override
@@ -53,5 +54,6 @@ public class SetUp2Activity extends SetUpBaseActivity {
 		Intent intent = new Intent(this, SetUp1Activity.class);
 		startActivity(intent);
 		finish();
+		overridePendingTransition(R.anim.setup_enter_pre, R.anim.setup_exit_pre);
 	}
 }

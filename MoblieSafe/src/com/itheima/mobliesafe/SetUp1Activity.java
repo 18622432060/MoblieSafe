@@ -23,11 +23,16 @@ public class SetUp1Activity extends SetUpBaseActivity {
 		Intent intent = new Intent(this, SetUp2Activity.class);
 		startActivity(intent);
 		finish();
+		// 执行平移动画
+		// 执行界面切换动画的操作,是在startActivity或者finish之后执行
+		// enterAnim : 新的界面进入的动画
+		// exitAnim : 旧的界面退出的动画
+		overridePendingTransition(R.anim.setup_enter_next, R.anim.setup_exit_next);
 	}
 
 	@Override
 	public void pre_activity() {
-		
+
 	}
 
 }
