@@ -3,6 +3,7 @@ package com.itheima.mobliesafe;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.itheima.mobliesafe.utils.PrefUtils;
 
@@ -25,5 +26,13 @@ public class LostfindActivity extends Activity {
 		}
 	}
 	
-
+	/**
+	 * 重新进入设置向导点击事件
+	 * @param v
+	 */
+	public void resetup(View v){
+		Intent intent = new Intent(this,SetUp1Activity.class);
+		startActivity(intent);
+		finish();
+	}
 }

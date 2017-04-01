@@ -1,5 +1,7 @@
 package com.itheima.mobliesafe;
 
+import com.itheima.mobliesafe.utils.PrefUtils;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,7 +15,12 @@ public class SetUp4Activity extends SetUpBaseActivity {
 
 	@Override
 	public void next_activity() {
+		//保存用户第一次进入手机防盗模块设置向导的状态,frist
+		PrefUtils.setBoolean(getApplicationContext(), "first", false);
 		// 跳转到手机防盗页面
+		Intent intent = new Intent(this,LostfindActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
