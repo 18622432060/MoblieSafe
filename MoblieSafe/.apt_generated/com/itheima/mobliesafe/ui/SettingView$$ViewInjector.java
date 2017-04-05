@@ -7,11 +7,11 @@ import butterknife.ButterKnife.Finder;
 public class SettingView$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.ui.SettingView target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131296277, "field 'tv_setting_title'");
+    view = finder.findRequiredView(source, 2131296281, "field 'tv_setting_title'");
     target.tv_setting_title = (android.widget.TextView) view;
-    view = finder.findRequiredView(source, 2131296279, "field 'cb_setting_update'");
+    view = finder.findRequiredView(source, 2131296283, "field 'cb_setting_update'");
     target.cb_setting_update = (android.widget.CheckBox) view;
-    view = finder.findRequiredView(source, 2131296278, "field 'tv_setting_des'");
+    view = finder.findRequiredView(source, 2131296282, "field 'tv_setting_des'");
     target.tv_setting_des = (android.widget.TextView) view;
   }
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_itemcontact_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Datouerzi"
+        android:textColor="#ff0000"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_itemcontact_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_call"
+        android:gravity="center"
+        android:paddingRight="30dp"
+        android:text="110"
+        android:textColor="#00ff00"
+        android:textSize="16sp" />
+
+</LinearLayout>

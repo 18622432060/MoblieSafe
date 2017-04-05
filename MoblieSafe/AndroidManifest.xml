@@ -43,11 +43,19 @@
 		<activity android:name=".SetUp3Activity" />
 		<activity android:name=".SetUp4Activity" />
 		<activity android:name=".SetUpBaseActivity" />
+		<activity android:name=".ContactActivity" />
 		<receiver android:name="com.itheima.mobliesafe.receiver.BootCompleteReceiver">
 			<!-- priority : 广播接受者的优先级,值越大优先级越高,越先接收到广播 -->
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>		    
 		</receiver>
+		
+		<!-- 要想实现拦截操作,优先级必须大于0,小于0是系统先接受到短信,大于0是我们先接受到短信 -->
+        <receiver android:name="com.itheima.mobliesafe.receiver.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

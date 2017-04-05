@@ -7,14 +7,14 @@ import butterknife.ButterKnife.Finder;
 public class SpalshActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.SpalshActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131296269, "field 'tv_spalsh_plan'");
-    target.tv_spalsh_plan = (android.widget.TextView) view;
-    view = finder.findRequiredView(source, 2131296267, "field 'tv_splash_versionname'");
+    view = finder.findRequiredView(source, 2131296269, "field 'tv_splash_versionname'");
     target.tv_splash_versionname = (android.widget.TextView) view;
+    view = finder.findRequiredView(source, 2131296271, "field 'tv_spalsh_plan'");
+    target.tv_spalsh_plan = (android.widget.TextView) view;
   }
 
   public static void reset(com.itheima.mobliesafe.SpalshActivity target) {
-    target.tv_spalsh_plan = null;
     target.tv_splash_versionname = null;
+    target.tv_spalsh_plan = null;
   }
 }

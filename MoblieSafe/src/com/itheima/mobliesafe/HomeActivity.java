@@ -111,12 +111,17 @@ public class HomeActivity extends Activity {
 		}
 
 	}
-	
+	AlertDialog.Builder builder = null;
 	/**
 	 * 设置密码对话框
 	 */
 	protected void showSetPassWordDialog() {
-		AlertDialog.Builder builder = new Builder(this);
+		if(builder ==null){	
+			builder = new Builder(this);
+		}else{
+			builder = null;
+			return;
+		}
 		//设置对话框不能消息
 		builder.setCancelable(false);
 		//将布局文件转化成view对象
@@ -183,7 +188,12 @@ public class HomeActivity extends Activity {
 	 */
 	protected void showEnterPasswordDialog() {
 		//第一步:复制布局
-		AlertDialog.Builder builder = new Builder(this);
+		if(builder ==null){	
+			builder = new Builder(this);
+		}else{
+			builder = null;
+			return;
+		}
 		//设置对话框不能消息
 		builder.setCancelable(false);
 		//将布局文件转化成view对象
