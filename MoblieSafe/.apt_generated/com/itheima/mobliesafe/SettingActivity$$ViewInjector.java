@@ -7,7 +7,7 @@ import butterknife.ButterKnife.Finder;
 public class SettingActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.SettingActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131296263, "field 'sv_setting_update'");
+    view = finder.findRequiredView(source, 2131427338, "field 'sv_setting_update'");
     target.sv_setting_update = (com.itheima.mobliesafe.ui.SettingView) view;
   }
 

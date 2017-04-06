@@ -16,8 +16,10 @@ public class SettingView extends RelativeLayout {
 	
 	@InjectView(R.id.tv_setting_title)
 	TextView tv_setting_title;
+	
 	@InjectView(R.id.tv_setting_des)
 	TextView tv_setting_des;
+	
 	@InjectView(R.id.cb_setting_update)
 	CheckBox cb_setting_update;
 	

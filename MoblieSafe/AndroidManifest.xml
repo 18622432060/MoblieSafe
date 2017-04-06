@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:name="com.itheima.mobliesafe.MoblieSafeApplication"
@@ -44,6 +48,8 @@
 		<activity android:name=".SetUp4Activity" />
 		<activity android:name=".SetUpBaseActivity" />
 		<activity android:name=".ContactActivity" />
+		<activity android:name=".AToolsActivity" />
+		<activity android:name=".AddressActivity" />
 		<receiver android:name="com.itheima.mobliesafe.receiver.BootCompleteReceiver">
 			<!-- priority : 广播接受者的优先级,值越大优先级越高,越先接收到广播 -->
             <intent-filter android:priority="1000">
@@ -57,5 +63,19 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.itheima.mobliesafe.receiver.Admin"
+            android:description="@string/sample_device_admin_description"
+            android:label="@string/sample_device_admin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin_sample" />
+
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.itheima.mobliesafe.service.GPSService"></service>
     </application>
 </manifest>

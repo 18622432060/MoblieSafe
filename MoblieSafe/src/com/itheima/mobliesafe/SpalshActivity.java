@@ -1,6 +1,9 @@
 package com.itheima.mobliesafe;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.json.JSONObject;
 
@@ -12,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +29,7 @@ import butterknife.InjectView;
 
 import com.itheima.mobliesafe.utils.HttpHelper;
 import com.itheima.mobliesafe.utils.HttpHelper.HttpResult;
+import com.itheima.mobliesafe.utils.IOUtils;
 import com.itheima.mobliesafe.utils.PrefUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -58,8 +63,44 @@ public class SpalshActivity extends Activity {
 		ButterKnife.inject(this);
 		tv_splash_versionname.setText("版本号:" + getVersionName());
 		new HttpTask().execute();//启动AsyncTask异步任务
+	    copyDb();
 	}
 
+	/**
+	 * 拷贝数据库
+	 */
+	private void copyDb() {
+		File file = new File(getFilesDir(), "address.db");
+		//判断文件是否存在
+		if (!file.exists()) {
+			//从assets目录中将数据库读取出来
+			//1.获取assets的管理者
+			AssetManager am = getAssets();
+			InputStream in = null;
+			FileOutputStream out = null;
+			try {
+			 	//2.读取数据库
+				in = am.open("address.db");
+				//写入流
+				//getCacheDir : 获取缓存的路径
+				//getFilesDir : 获取文件的路径
+				out = new FileOutputStream(file);
+				//3.读写操作
+				//设置缓冲区
+				byte[] b = new byte[1024];
+				int len = -1;
+				while(( len = in.read(b)) != -1){
+					out.write(b, 0, len);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				IOUtils.close(in);
+				IOUtils.close(out);
+			}
+		}
+	}
+	
 	/**
 	 * 提醒用户更新版本
 	 */
