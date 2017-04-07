@@ -5,12 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!--
-         layout_gravity : 设置控件在父控件中的位置 
-    	 gravity : 设置控件内的内容的位置
-    	 layout_marginTop : 距离某控件的距离
-    	 paddingTop : 距离控件内边框的距离,距离textview控件内顶边框的距离
-    -->
+    <!-- layout_gravity : 设置控件在父控件中的位置 -->
+    <!-- gravity : 设置控件内的内容的位置 -->
+    <!-- layout_marginTop : 距离某控件的距离 -->
+    <!-- paddingTop : 距离控件内边框的距离,距离textview控件内顶边框的距离 -->
 
     <TextView
         android:id="@+id/textView1"
@@ -30,5 +28,23 @@
         itheima:des_off="关闭提示更新"
         itheima:des_on="打开提示更新"
         itheima:title="提示更新" />
+
+    <com.itheima.mobliesafe.ui.SettingView
+        android:id="@+id/sv_setting_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        itheima:des_off="关闭显示号码归属地"
+        itheima:des_on="打开显示号码归属地"
+        itheima:title="显示号码归属地" />
+
+    <com.itheima.mobliesafe.ui.SettingClickView
+        android:id="@+id/scv_setting_changedbg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.itheima.mobliesafe.ui.SettingClickView
+        android:id="@+id/scv_setting_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

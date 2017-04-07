@@ -27,6 +27,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import com.itheima.mobliesafe.service.AddressService;
 import com.itheima.mobliesafe.utils.HttpHelper;
 import com.itheima.mobliesafe.utils.HttpHelper.HttpResult;
 import com.itheima.mobliesafe.utils.IOUtils;
@@ -64,6 +65,9 @@ public class SpalshActivity extends Activity {
 		tv_splash_versionname.setText("版本号:" + getVersionName());
 		new HttpTask().execute();//启动AsyncTask异步任务
 	    copyDb();
+	    //开启监听电话状态的服务
+	    Intent intent = new Intent(this,AddressService.class);
+	    startService(intent);
 	}
 
 	/**

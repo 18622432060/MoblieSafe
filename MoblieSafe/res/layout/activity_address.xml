@@ -30,7 +30,7 @@
         android:inputType="phone" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btn_address_query"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="query"
