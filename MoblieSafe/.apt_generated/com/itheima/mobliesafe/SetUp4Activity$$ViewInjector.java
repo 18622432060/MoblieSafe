@@ -7,7 +7,7 @@ import butterknife.ButterKnife.Finder;
 public class SetUp4Activity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.SetUp4Activity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427348, "field 'cb_setup4_protected'");
+    view = finder.findRequiredView(source, 2131427350, "field 'cb_setup4_protected'");
     target.cb_setup4_protected = (android.widget.CheckBox) view;
   }
 

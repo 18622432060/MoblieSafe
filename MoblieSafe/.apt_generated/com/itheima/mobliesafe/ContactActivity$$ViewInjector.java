@@ -7,14 +7,14 @@ import butterknife.ButterKnife.Finder;
 public class ContactActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.ContactActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427333, "field 'loading'");
-    target.loading = (android.widget.ProgressBar) view;
     view = finder.findRequiredView(source, 2131427332, "field 'lv_contact_contacts'");
     target.lv_contact_contacts = (android.widget.ListView) view;
+    view = finder.findRequiredView(source, 2131427333, "field 'loading'");
+    target.loading = (android.widget.ProgressBar) view;
   }
 
   public static void reset(com.itheima.mobliesafe.ContactActivity target) {
-    target.loading = null;
     target.lv_contact_contacts = null;
+    target.loading = null;
   }
 }

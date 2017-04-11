@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:name="com.itheima.mobliesafe.MoblieSafeApplication"
@@ -52,7 +53,7 @@
 		<activity android:name=".ContactActivity" />
 		<activity android:name=".AToolsActivity" />
 		<activity android:name=".AddressActivity" />
-		<activity android:name=".DragViewActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/><!--毛玻璃效果 -->
+		<activity android:name=".DragViewActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:launchMode="singleTop"/><!--毛玻璃效果 -->
 		<receiver android:name="com.itheima.mobliesafe.receiver.BootCompleteReceiver">
 			<!-- priority : 广播接受者的优先级,值越大优先级越高,越先接收到广播 -->
             <intent-filter android:priority="1000">

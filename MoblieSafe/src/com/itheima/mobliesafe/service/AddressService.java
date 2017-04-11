@@ -10,9 +10,12 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 import com.itheima.mobliesafe.R;
@@ -20,12 +23,15 @@ import com.itheima.mobliesafe.db.dao.AddressDao;
 import com.itheima.mobliesafe.utils.PrefUtils;
 
 public class AddressService extends Service {
-
+    final static int  SYSTEM_NOTIFICATION_BAR  = 25 ;//系统通知栏高度
 	private TelephonyManager telephonyManager;
 	private MyPhoneStateListener myPhoneStateListener;
 	private WindowManager windowManager;
 	private View view;
 	private MyOutGoingCallReceiver myOutGoingCallReceiver;
+	private WindowManager.LayoutParams params;
+	private int width;
+	private int height;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -76,6 +82,14 @@ public class AddressService extends Service {
 		//LISTEN_NONE : 不做任务监听操作
 		//LISTEN_CALL_STATE : 监听电话状态
 		telephonyManager.listen(myPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		
+		// 获取屏幕的宽度
+		WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+		// windowManager.getDefaultDisplay().getWidth();
+		DisplayMetrics outMetrics = new DisplayMetrics();// 创建了一张白纸
+		windowManager.getDefaultDisplay().getMetrics(outMetrics);// 给白纸设置宽高
+		width = outMetrics.widthPixels;
+		height = outMetrics.heightPixels;
 	}
 	
 	private class MyPhoneStateListener extends PhoneStateListener{
@@ -135,27 +149,26 @@ public class AddressService extends Service {
 		//根据归属地提示框风格中设置的风格索引值设置toast显示的背景风格
 		view.setBackgroundResource(bgcolor[PrefUtils.getInt(getApplicationContext(), "which", 0)]);
 		
-		//3.设置toast的属性
-		//layoutparams是toast的属性,控件要添加到那个父控件中,父控件就要使用那个父控件的属性,表示控件的属性规则符合父控件的属性规则
-		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+		params = new WindowManager.LayoutParams();
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;//高度包裹内容
         params.width = WindowManager.LayoutParams.WRAP_CONTENT; //宽度包裹内容
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE  //没有焦点
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE  // 不可触摸
+        params.flags =	WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE  //没有焦点
+//                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE  // 不可触摸
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON; // 保持当前屏幕
         params.format = PixelFormat.TRANSLUCENT; // 透明
-        params.type = WindowManager.LayoutParams.TYPE_TOAST; // 执行toast的类型
+    	params.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE; // 使用TYPE_PHONE//// 执行toast的类型,toast天生是没有获取见到和触摸事件
 		
         //设置toast位置
         //效果冲突,以默认的效果为主
         params.gravity = Gravity.LEFT | Gravity.TOP;
         
-        params.x = 120;//不是坐标,表示的距离边框的距离,根据gravity来设置的,如果gravity是left表示距离左边框的距离,如果是right表示距离有边框的距离
-        params.y = 100;//跟x的含义
+        params.x = PrefUtils.getInt(getApplicationContext(), "x", 100);//不是坐标,表示的距离边框的距离,根据gravity来设置的,如果gravity是left表示距离左边框的距离,如果是right表示距离有边框的距离
+        params.y = PrefUtils.getInt(getApplicationContext(), "y", 100);//跟x的含义
         
 		//2.将view对象添加到windowManager中
 		//params : layoutparams  控件的属性
 		//将params属性设置给view对象,并添加到windowManager中
+        setTouch();
 		windowManager.addView(view, params);
 	}
 	
@@ -168,6 +181,75 @@ public class AddressService extends Service {
 			windowManager = null;
 			view = null;
 		}
+	}
+	
+	/**
+	 * 设置触摸监听
+	 */
+	private void setTouch() {
+		view.setOnTouchListener(new OnTouchListener() {
+			private int startX;
+			private int startY;
+			//v : 当前的控件
+			//event : 控件执行的事件
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				//event.getAction() : 获取控制的执行的事件
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						//按下的事件
+						System.out.println("按下了....");
+						//1.按下控件,记录开始的x和y的坐标
+						startX = (int) event.getRawX();
+						startY = (int) event.getRawY();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						//移动的事件
+						System.out.println("移动了....");
+						//2.移动到新的位置记录新的位置的x和y的坐标
+						int newX = (int) event.getRawX();
+						int newY = (int) event.getRawY();
+						//3.计算移动的偏移量
+						int dX = newX-startX;
+						int dY = newY-startY;
+						//4.移动相应的偏移量,重新绘制控件
+						params.x+=dX;
+						params.y+=dY;
+						//控制控件的坐标不能移出外拨电话界面
+						if (params.x < 0) {
+							params.x = 0;
+						}
+						if (params.y < 0) {
+							params.y = 0;
+						}
+						if (params.x > width - view.getWidth()) {
+							params.x = width - view.getWidth();
+						}
+						if (params.y > height - view.getHeight() - SYSTEM_NOTIFICATION_BAR) {
+							params.y = height - view.getHeight() - SYSTEM_NOTIFICATION_BAR;
+						}
+						
+						windowManager.updateViewLayout(view, params);//更新windowmanager中的控件
+						//5.更新开始的坐标
+						startX=newX;
+						startY=newY;
+						break;
+					case MotionEvent.ACTION_UP:
+						//抬起的事件
+						System.out.println("抬起了....");
+						//保存控件的坐标,保存的是控件的坐标不是手指坐标
+						//获取控件的坐标
+						int x = view.getLeft();
+						int y = view.getTop();
+						PrefUtils.setInt(getApplicationContext(), "x", x);
+						PrefUtils.setInt(getApplicationContext(), "y", y);
+						break;
+				}
+				//True if the listener has consumed the event, false otherwise.
+				//true:事件消费了,执行了,false:表示事件被拦截了
+				return false;
+			}
+		});
 	}
 	
 }

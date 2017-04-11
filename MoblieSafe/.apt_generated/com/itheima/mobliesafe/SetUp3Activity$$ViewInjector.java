@@ -7,9 +7,9 @@ import butterknife.ButterKnife.Finder;
 public class SetUp3Activity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.SetUp3Activity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427345, "field 'et_setup3_safenum'");
+    view = finder.findRequiredView(source, 2131427347, "field 'et_setup3_safenum'");
     target.et_setup3_safenum = (android.widget.EditText) view;
-    view = finder.findRequiredView(source, 2131427346, "field 'et_setup3_but' and method 'selectContacts'");
+    view = finder.findRequiredView(source, 2131427348, "field 'et_setup3_but' and method 'selectContacts'");
     target.et_setup3_but = (android.widget.Button) view;
     view.setOnClickListener(
       new android.view.View.OnClickListener() {
