@@ -19,11 +19,13 @@ import butterknife.InjectView;
 import com.itheima.mobliesafe.utils.PrefUtils;
 
 public class DragViewActivity extends Activity {
-	
     final static int  SYSTEM_NOTIFICATION_BAR  = 25 ;//系统通知栏高度
-	
+
 	@InjectView(R.id.ll_dragview_toast)
     LinearLayout ll_dragview_toast;
+	
+	@InjectView(R.id.rl_dragview_bg)
+    RelativeLayout rl_dragview_bg;
 	
 	private int width;
 	private int height;
@@ -32,6 +34,9 @@ public class DragViewActivity extends Activity {
 	TextView tv_dragview_bottom;
 	@InjectView(R.id.tv_dragview_top)
 	TextView tv_dragview_top;
+
+	int tempX ;
+	int tempY ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class DragViewActivity extends Activity {
 		ll_dragview_toast.setBackgroundResource(bgcolor[PrefUtils.getInt(getApplicationContext(), "which", 0)]);
 		setTouch();
 		setDoubleClick();
+		
 	}
 	
 	long[] mHits = new long[2];
@@ -106,6 +112,47 @@ public class DragViewActivity extends Activity {
 		        	int l = (width - ll_dragview_toast.getWidth())/2;
 		        	int t = (height - SYSTEM_NOTIFICATION_BAR - ll_dragview_toast.getHeight())/2;
 		        	ll_dragview_toast.layout(l, t, l+ll_dragview_toast.getWidth(), t+ll_dragview_toast.getHeight());
+		        	//保存控件的坐标
+					PrefUtils.setInt(getApplicationContext(), "x", l);
+					PrefUtils.setInt(getApplicationContext(), "y", t);
+		        }
+			}
+		});
+		
+		rl_dragview_bg.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
+		        mHits[mHits.length-1] = SystemClock.uptimeMillis();  // 将离开机的时间设置给数组的第二个元素,离开机时间 :毫秒值,手机休眠不算
+		        if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {  // 判断是否多击操作
+		           	int l = tempX - ll_dragview_toast.getWidth()/2;
+		        	int t = tempY - ll_dragview_toast.getHeight();
+		        	
+		        	if ( l < 0) {
+		        		 l = 0;
+					}
+					if (t < 0) {
+						t = 0;
+					}
+					if (l > width - ll_dragview_toast.getWidth()) {
+						l = width - ll_dragview_toast.getWidth();
+					}
+					if (t > height - ll_dragview_toast.getHeight() - SYSTEM_NOTIFICATION_BAR) {
+						t = height - ll_dragview_toast.getHeight() - SYSTEM_NOTIFICATION_BAR;
+					}
+		     
+		        	ll_dragview_toast.layout(l, t, l+ll_dragview_toast.getWidth(), t+ll_dragview_toast.getHeight());
+		        	
+		        	if (t  >= height/2) {
+		    			//隐藏下方显示上方
+		    			tv_dragview_bottom.setVisibility(View.INVISIBLE);
+		    			tv_dragview_top.setVisibility(View.VISIBLE);
+		    		}else{
+		    			//隐藏上方显示下方
+		    			tv_dragview_top.setVisibility(View.INVISIBLE);
+		    			tv_dragview_bottom.setVisibility(View.VISIBLE);
+		    		}
 		        	//保存控件的坐标
 					PrefUtils.setInt(getApplicationContext(), "x", l);
 					PrefUtils.setInt(getApplicationContext(), "y", t);
@@ -188,6 +235,20 @@ public class DragViewActivity extends Activity {
 				return false;
 			}
 		});
+		
+		rl_dragview_bg.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						tempX = (int) event.getRawX();
+						tempY = (int) event.getRawY();
+						break;
+				
+				}
+				return false;
+			}
+		});
 	}
-
+	
 }

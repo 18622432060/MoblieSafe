@@ -7,14 +7,14 @@ import butterknife.ButterKnife.Finder;
 public class LostfindActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.LostfindActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427341, "field 'tv_lostfind_protected'");
-    target.tv_lostfind_protected = (android.widget.ImageView) view;
-    view = finder.findRequiredView(source, 2131427340, "field 'tv_lostfind_safenum'");
+    view = finder.findRequiredView(source, 2131427342, "field 'tv_lostfind_safenum'");
     target.tv_lostfind_safenum = (android.widget.TextView) view;
+    view = finder.findRequiredView(source, 2131427343, "field 'tv_lostfind_protected'");
+    target.tv_lostfind_protected = (android.widget.ImageView) view;
   }
 
   public static void reset(com.itheima.mobliesafe.LostfindActivity target) {
-    target.tv_lostfind_protected = null;
     target.tv_lostfind_safenum = null;
+    target.tv_lostfind_protected = null;
   }
 }

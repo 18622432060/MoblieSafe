@@ -9,16 +9,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import com.itheima.mobliesafe.service.AddressService;
+import com.itheima.mobliesafe.service.BlackNumService;
 import com.itheima.mobliesafe.ui.SettingClickView;
 import com.itheima.mobliesafe.ui.SettingView;
 import com.itheima.mobliesafe.utils.AdressUtils;
 import com.itheima.mobliesafe.utils.PrefUtils;
+import com.itheima.mobliesafe.utils.TextManager;
+import com.itheima.mobliesafe.utils.TextManager.TestObserver;
 
-public class SettingActivity extends Activity {
+public class SettingActivity extends Activity implements TestObserver {
 	
 	@InjectView(R.id.sv_setting_update)
 	SettingView sv_setting_update;
@@ -32,6 +36,10 @@ public class SettingActivity extends Activity {
 	@InjectView(R.id.scv_setting_location)
 	SettingClickView scv_setting_location;
 	
+	@InjectView(R.id.sv_setting_blacknum)
+	SettingView sv_setting_blacknum;
+	private TextManager mDM;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,6 +48,8 @@ public class SettingActivity extends Activity {
 		update();
 		changedbg();
 		location();
+		mDM = TextManager.getInstance();
+		mDM.registerObserver(this);// 注册观察者, 监听状态和进度变化
 	}
 	
 	/**
@@ -199,12 +209,53 @@ public class SettingActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		address();
+		blackNum();
 	}
 	
 	//activity不可见的时候调用
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
+	
+	/**
+	 * 黑名单拦截
+	 */
+	private void blackNum() {
+		// 动态的获取服务是否开启
+		if (AdressUtils.isRunningService("com.itheima.mobliesafe.service.BlackNumService",getApplicationContext())) {
+			// 开启服务
+			sv_setting_blacknum.setChecked(true);
+		} else {
+			// 关闭服务
+			sv_setting_blacknum.setChecked(false);
+		}
+		sv_setting_blacknum.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SettingActivity.this,BlackNumService.class);
+				// 根据checkbox的状态设置描述信息的状态
+				// isChecked() : 之前的状态
+				if (sv_setting_blacknum.isChecked()) {
+					// 关闭提示更新
+					stopService(intent);
+					// 更新checkbox的状态
+					sv_setting_blacknum.setChecked(false);
+				} else {
+					// 打开提示更新
+					startService(intent);
+					sv_setting_blacknum.setChecked(true);
+				}
+			}
+		});
+	}
+
+	/**
+	 * 广播接收者通过 观察者模式把短信显示在当前页面
+	 */
+	@Override
+	public void onDownloadStateChanged(String number) {
+		Toast.makeText(getApplicationContext(), number, Toast.LENGTH_SHORT).show();
 	}
 	
 }

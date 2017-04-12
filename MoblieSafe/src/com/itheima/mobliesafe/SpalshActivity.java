@@ -239,7 +239,7 @@ public class SpalshActivity extends Activity {
 			//url : 新版本下载的路径 apkurl
 			//target : 保存新版本的目录
 			//callback : RequestCallBack
-			httpUtils.download(apkurl, "/mnt/sdcard/mobliesafe75_2.apk", new RequestCallBack<File>() {
+			httpUtils.download(apkurl, "/mnt/sdcard/mobliesafe_2.apk", new RequestCallBack<File>() {
 				//下载成功调用的方法
 				@Override
 				public void onSuccess(ResponseInfo<File> arg0) {
@@ -283,8 +283,8 @@ public class SpalshActivity extends Activity {
 		intent.addCategory("android.intent.category.DEFAULT");
 		//单独设置会相互覆盖
 		/*intent.setType("application/vnd.android.package-archive");
-		intent.setData(Uri.fromFile(new File("/mnt/sdcard/mobliesafe75_2.apk")));*/
-		intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/mobliesafe75_2.apk")),"application/vnd.android.package-archive");
+		intent.setData(Uri.fromFile(new File("/mnt/sdcard/mobliesafe_2.apk")));*/
+		intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/mobliesafe_2.apk")),"application/vnd.android.package-archive");
 		//在当前activity退出的时候,会调用之前的activity的onActivityResult方法
 		//requestCode : 请求码,用来标示是从哪个activity跳转过来
 		//ABC a -> c  b-> c , c 区分intent是从哪个activity传递过来的,这时候就要用到请求码
