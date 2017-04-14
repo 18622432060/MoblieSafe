@@ -16,6 +16,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,8 +70,33 @@ public class SpalshActivity extends Activity {
 	    //开启监听电话状态的服务
 	    Intent intent = new Intent(this,AddressService.class);
 	    startService(intent);
+	    shortcut();
 	}
 
+	/**
+	 * 创建快捷方式
+	 */
+	private void shortcut() {
+		if (PrefUtils.getBoolean(getApplicationContext(),"firstshortcut", true)) {
+			// 给桌面发送一个广播
+			Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+			// 设置属性
+			// 设置快捷方式名称
+			intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Dead by Daylight");
+			// 设置快捷方式的图标
+			Bitmap value = BitmapFactory.decodeResource(getResources(),R.drawable.dead_by_daylight);
+			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, value);
+			// 设置快捷方式执行的操作
+			Intent intent2 = new Intent();
+			intent2.setAction("com.itheima.mobliesafe.home");
+			intent2.addCategory("android.intent.category.DEFAULT");
+			intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent2);
+			sendBroadcast(intent);
+			//保存已经创建快捷方式的状态
+			PrefUtils.getBoolean(getApplicationContext(),"firstshortcut", false);
+		}
+	}
+	
 	/**
 	 * 拷贝数据库
 	 */

@@ -7,9 +7,9 @@ import butterknife.ButterKnife.Finder;
 public class SettingClickView$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.ui.SettingClickView target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427392, "field 'tv_setting_des'");
+    view = finder.findRequiredView(source, 2131492933, "field 'tv_setting_des'");
     target.tv_setting_des = (android.widget.TextView) view;
-    view = finder.findRequiredView(source, 2131427391, "field 'tv_setting_title'");
+    view = finder.findRequiredView(source, 2131492932, "field 'tv_setting_title'");
     target.tv_setting_title = (android.widget.TextView) view;
   }
 

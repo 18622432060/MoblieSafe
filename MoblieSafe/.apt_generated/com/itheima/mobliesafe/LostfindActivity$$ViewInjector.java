@@ -7,9 +7,9 @@ import butterknife.ButterKnife.Finder;
 public class LostfindActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.LostfindActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131427343, "field 'tv_lostfind_protected'");
+    view = finder.findRequiredView(source, 2131492879, "field 'tv_lostfind_protected'");
     target.tv_lostfind_protected = (android.widget.ImageView) view;
-    view = finder.findRequiredView(source, 2131427342, "field 'tv_lostfind_safenum'");
+    view = finder.findRequiredView(source, 2131492878, "field 'tv_lostfind_safenum'");
     target.tv_lostfind_safenum = (android.widget.TextView) view;
   }
 

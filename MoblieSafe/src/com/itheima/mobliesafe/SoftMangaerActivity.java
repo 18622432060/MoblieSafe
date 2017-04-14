@@ -40,6 +40,7 @@ import butterknife.InjectView;
 import com.itheima.mobliesafe.bean.AppInfo;
 import com.itheima.mobliesafe.engine.AppEngine;
 import com.itheima.mobliesafe.utils.AppUtil;
+import com.itheima.mobliesafe.utils.UIUtils;
 public class SoftMangaerActivity extends Activity implements OnClickListener{
 	
 	@InjectView(R.id.lv_softmanager_application)
@@ -136,7 +137,7 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 				int y = location[1];
 				//parent : 要挂载在那个控件上
 				//gravity,x,y : 控制popuwindow显示的位置
-				popupWindow.showAtLocation(parent, Gravity.LEFT | Gravity.TOP, x+50, y);
+				popupWindow.showAtLocation(parent, Gravity.LEFT | Gravity.TOP, x+UIUtils.dip2px(50), y);
 				//6.设置动画
 				//缩放动画
 				//前四个 :　控制控件由没有变到有   动画 0:没有    1:整个控件

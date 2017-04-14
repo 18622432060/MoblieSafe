@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:itheima="http://schemas.android.com/apk/res/com.itheima.mobliesafe"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <!-- layout_gravity : 设置控件在父控件中的位置 -->
-    <!-- gravity : 设置控件内的内容的位置 -->
-    <!-- layout_marginTop : 距离某控件的距离 -->
-    <!-- paddingTop : 距离控件内边框的距离,距离textview控件内顶边框的距离 -->
-
-    <TextView
-        android:id="@+id/textView1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#8866ff00"
-        android:gravity="center_horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="设置中心"
-        android:textSize="22sp" />
+        android:orientation="vertical" >
 
-    <com.itheima.mobliesafe.ui.SettingView
-        android:id="@+id/sv_setting_update"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        itheima:des_off="关闭提示更新"
-        itheima:des_on="打开提示更新"
-        itheima:title="提示更新" />
+        <!-- layout_gravity : 设置控件在父控件中的位置 -->
+        <!-- gravity : 设置控件内的内容的位置 -->
+        <!-- layout_marginTop : 距离某控件的距离 -->
+        <!-- paddingTop : 距离控件内边框的距离,距离textview控件内顶边框的距离 -->
 
-    <com.itheima.mobliesafe.ui.SettingView
-        android:id="@+id/sv_setting_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        itheima:des_off="关闭显示号码归属地"
-        itheima:des_on="打开显示号码归属地"
-        itheima:title="显示号码归属地" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#8866ff00"
+            android:gravity="center_horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="设置中心"
+            android:textSize="22sp" />
 
-    <com.itheima.mobliesafe.ui.SettingClickView
-        android:id="@+id/scv_setting_changedbg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.itheima.mobliesafe.ui.SettingView
+            android:id="@+id/sv_setting_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            itheima:des_off="关闭提示更新"
+            itheima:des_on="打开提示更新"
+            itheima:title="提示更新" />
 
-    <com.itheima.mobliesafe.ui.SettingClickView
-        android:id="@+id/scv_setting_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <com.itheima.mobliesafe.ui.SettingView
+            android:id="@+id/sv_setting_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            itheima:des_off="关闭显示号码归属地"
+            itheima:des_on="打开显示号码归属地"
+            itheima:title="显示号码归属地" />
 
-    <com.itheima.mobliesafe.ui.SettingView
-        android:id="@+id/sv_setting_blacknum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        itheima:des_off="关闭黑名单拦截"
-        itheima:des_on="打开黑名单拦截"
-        itheima:title="黑名单拦截" />
+        <com.itheima.mobliesafe.ui.SettingClickView
+            android:id="@+id/scv_setting_changedbg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <com.itheima.mobliesafe.ui.SettingClickView
+            android:id="@+id/scv_setting_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.itheima.mobliesafe.ui.SettingView
+            android:id="@+id/sv_setting_blacknum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            itheima:des_off="关闭黑名单拦截"
+            itheima:des_on="打开黑名单拦截"
+            itheima:title="黑名单拦截" />
+    </LinearLayout>
+
+</ScrollView>

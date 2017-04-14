@@ -27,7 +27,8 @@ import butterknife.InjectView;
 
 import com.itheima.mobliesafe.bean.TaskInfo;
 import com.itheima.mobliesafe.engine.TaskEngine;
-
+import com.itheima.mobliesafe.utils.TaskUtil;
+@SuppressWarnings("deprecation")
 public class TaskManagerActivity extends Activity {
 	
 	@InjectView(R.id.lv_taskmanager_processes)
@@ -36,19 +37,53 @@ public class TaskManagerActivity extends Activity {
 	@InjectView(R.id.loading)
 	ProgressBar loading;
 	
+	@InjectView(R.id.tv_taskmanager_processes)
+	TextView tv_taskmanager_processes;
+	
+	@InjectView(R.id.tv_taskmanager_freeandtotalram)
+	TextView tv_taskmanager_freeandtotalram;
+	
 	private List<TaskInfo> list;
 	private List<TaskInfo> userappinfo;// 用户进程集合
 	private List<TaskInfo> systemappinfo;// 系统进程的集合
 	private Myadapter myadapter;
 	private TaskInfo taskInfo;
+	private int processCount;
+	//是否显示系统进程的标示
+	private boolean isshowSystem = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_taskmanager);
 		ButterKnife.inject(this);
+		// 设置显示数据
+		// 获取相应的数据
+		// 获取运行的进程个数
+		processCount = TaskUtil.getProcessCount(getApplicationContext());
+		tv_taskmanager_processes.setText("运行中进程:\n" + processCount + "个");
+		setFreeAndTotalRam();// 获取剩余,总内存
 		fillData();// 加载数据
 		listviewItemClick();
+	}
+
+	private void setFreeAndTotalRam() {
+		long availableRam = TaskUtil.getAvailableRam(getApplicationContext());
+		// 数据转化
+		String availaRam = Formatter.formatFileSize(getApplicationContext(), availableRam);
+		// 获取总内存
+		// 根据不同的sdk版去调用不同的方法
+		// 1.获取当前的sdk版本
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		long totalRam;
+		if (sdk >= 16) {
+			totalRam = TaskUtil.getTotalRam(getApplicationContext());
+		} else {
+			totalRam = TaskUtil.getTotalRam();
+		}
+		// 数据转化
+		String totRam = Formatter.formatFileSize(getApplicationContext(), totalRam);
+		tv_taskmanager_freeandtotalram.setText("剩余/总内存:\n" + availaRam + "/" + totRam);
 	}
 
 	/**
@@ -136,7 +171,7 @@ public class TaskManagerActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			return userappinfo.size() + systemappinfo.size() + 2;
+			return isshowSystem==true ? userappinfo.size() + 1 + systemappinfo.size() + 1 : userappinfo.size() + 1;
 		}
 
 		@Override
@@ -194,7 +229,6 @@ public class TaskManagerActivity extends Activity {
 				// 系统程序
 				taskinfo = systemappinfo.get(position - userappinfo.size() - 2);
 			}
-
 			// 设置显示数据,null.方法 参数为null
 			if (taskinfo.getIcon() == null) {
 				viewHolder.iv_itemtaskmanager_icon.setImageResource(R.drawable.ic_default);
@@ -318,7 +352,13 @@ public class TaskManagerActivity extends Activity {
 		// 数据转化
 		String deletesize = Formatter.formatFileSize(getApplicationContext(), memory);
 		Toast.makeText(getApplicationContext(), "共清理" + deleteTaskInfos.size() + "个进程,释放" + deletesize + "内存空间", Toast.LENGTH_SHORT).show();
+		// 更改运行中的进程个数以及剩余总内存
+		processCount = processCount - deleteTaskInfos.size();
+		tv_taskmanager_processes.setText("运行中进程:\n" + processCount + "个");
 
+		// 更改剩余总内存,重新获取剩余总内存
+		setFreeAndTotalRam();
+		
 		// 为下次清理进程做准备
 		deleteTaskInfos.clear();
 		deleteTaskInfos = null;
@@ -332,7 +372,8 @@ public class TaskManagerActivity extends Activity {
 	 * @param v
 	 */
 	public void setting(View v) {
-
+		isshowSystem = !isshowSystem;//true 改为false  false改为true
+		myadapter.notifyDataSetChanged();//更新界面
 	}
 
 }
