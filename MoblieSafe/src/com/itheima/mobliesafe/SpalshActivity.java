@@ -52,7 +52,6 @@ public class SpalshActivity extends Activity {
 	private static final int MSG_JSON_ERROR = 6;
 	private int MSG_CURRENT = 0;
 	
-	
 	private final static String KEY_LOCK_PWD = "lock_pwd";//加锁判断
 
 	@InjectView(R.id.tv_splash_versionname)
@@ -72,7 +71,8 @@ public class SpalshActivity extends Activity {
 		ButterKnife.inject(this);
 		tv_splash_versionname.setText("版本号:" + getVersionName());
 		new HttpTask().execute();//启动AsyncTask异步任务
-	    copyDb();
+		copyDb("address.db");
+		copyDb("antivirus.db");
 		startService();
 	    shortcut();
 	}
@@ -118,8 +118,8 @@ public class SpalshActivity extends Activity {
 	/**
 	 * 拷贝数据库
 	 */
-	private void copyDb() {
-		File file = new File(getFilesDir(), "address.db");
+	private void copyDb(String dbname) {
+		File file = new File(getFilesDir(),dbname);
 		//判断文件是否存在
 		if (!file.exists()) {
 			//从assets目录中将数据库读取出来
@@ -129,7 +129,7 @@ public class SpalshActivity extends Activity {
 			FileOutputStream out = null;
 			try {
 			 	//2.读取数据库
-				in = am.open("address.db");
+				in = am.open(dbname);
 				//写入流
 				//getCacheDir : 获取缓存的路径
 				//getFilesDir : 获取文件的路径

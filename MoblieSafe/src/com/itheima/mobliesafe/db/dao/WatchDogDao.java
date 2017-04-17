@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.itheima.mobliesafe.db.WatchDogOpenHelper;
+import com.itheima.mobliesafe.utils.IOUtils;
 
 public class WatchDogDao {
 	
@@ -47,7 +48,7 @@ public class WatchDogDao {
 		contentResolver.notifyChange(uri, null);
 		
 		//3.关闭数据库
-		database.close();
+		IOUtils.close(database);
 	}
 	
 	/**
@@ -72,8 +73,8 @@ public class WatchDogDao {
 			isLock = true;
 		}
 		//4.关闭数据库
-		cursor.close();
-		database.close();
+		IOUtils.close(cursor);
+		IOUtils.close(database);
 		return isLock;
 	}
 	
@@ -98,7 +99,7 @@ public class WatchDogDao {
 		contentResolver.notifyChange(uri, null);
 		
 		//3.关闭数据库
-		database.close();
+		IOUtils.close(database);
 	}
 	
 	/**
@@ -117,8 +118,8 @@ public class WatchDogDao {
 			list.add(packagename);
 		}
 		//4.关闭数据库
-		cursor.close();
-		database.close();
+		IOUtils.close(cursor);
+		IOUtils.close(database);
 		return list;
 	}
 	
@@ -138,8 +139,8 @@ public class WatchDogDao {
 			list.add(packagename);
 		}
 		//4.关闭数据库
-		cursor.close();
-		database.close();
+		IOUtils.close(cursor);
+		IOUtils.close(database);
 		return list;
 	}
 	

@@ -7,7 +7,7 @@ import butterknife.ButterKnife.Finder;
 public class AToolsActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.AToolsActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131492868, "field 'pb_atools_sms'");
+    view = finder.findRequiredView(source, 2131492873, "field 'pb_atools_sms'");
     target.pb_atools_sms = (android.widget.ProgressBar) view;
   }
 

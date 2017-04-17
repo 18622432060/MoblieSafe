@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.itheima.mobliesafe.bean.BlackNumInfo;
 import com.itheima.mobliesafe.db.BlackNumOpenHlper;
+import com.itheima.mobliesafe.utils.IOUtils;
 
 public class BlackNumDao {
 	
@@ -41,7 +42,7 @@ public class BlackNumDao {
 		values.put("mode", mode);
 		database.insert(BlackNumOpenHlper.DB_NAME, null, values);
 		//3.关闭数据库
-		database.close();
+		IOUtils.close(database);
 	}
 	
 	/**
@@ -59,7 +60,7 @@ public class BlackNumDao {
 		//whereArgs : 查询条件的参数
 		database.update(BlackNumOpenHlper.DB_NAME, values, "blacknum=?", new String[]{blacknum});
 		//3.关闭数据库
-		database.close();
+		IOUtils.close(database);
 	}
 	/**
 	 * 通过黑名单号码,查询黑名单号码的拦截模式
@@ -83,8 +84,8 @@ public class BlackNumDao {
 			mode = cursor.getInt(0);
 		}
 		//4.关闭数据库
-		cursor.close();
-		database.close();
+		IOUtils.close(cursor);
+		IOUtils.close(database);
 		return mode;
 	}
 	
@@ -101,7 +102,7 @@ public class BlackNumDao {
 		//whereArgs : 查询条件的参数
 		database.delete(BlackNumOpenHlper.DB_NAME, "blacknum=?", new String[]{blacknum});
 		//3.关闭数据库
-		database.close();
+		IOUtils.close(database);
 	}
 	
 	/**
@@ -127,8 +128,8 @@ public class BlackNumDao {
 			list.add(blackNumInfo);
 		}
 		//4.关闭数据库
-		cursor.close();
-		database.close();
+		IOUtils.close(cursor);
+		IOUtils.close(database);
 		return list;
 	}
 

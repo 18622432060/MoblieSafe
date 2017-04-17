@@ -7,9 +7,9 @@ import butterknife.ButterKnife.Finder;
 public class CallSmsSafeActivity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.CallSmsSafeActivity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131492870, "field 'loading'");
+    view = finder.findRequiredView(source, 2131492875, "field 'loading'");
     target.loading = (android.widget.ProgressBar) view;
-    view = finder.findRequiredView(source, 2131492869, "field 'lv_callsmssafe_blacknums'");
+    view = finder.findRequiredView(source, 2131492874, "field 'lv_callsmssafe_blacknums'");
     target.lv_callsmssafe_blacknums = (android.widget.ListView) view;
   }
 

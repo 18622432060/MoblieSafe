@@ -65,6 +65,7 @@
 		<activity android:name=".CallSmsSafeActivity" />
 		<activity android:name=".SoftMangaerActivity" />
 		<activity android:name=".TrafficActivity" />
+		<activity android:name=".AntivirusActivity" />
 		<activity android:name=".LockSetPwdActivity" android:launchMode="singleTop"/>
 		<activity android:name=".TaskManagerActivity" />
 <!-- 		    standard : 标准的启动模式 -->

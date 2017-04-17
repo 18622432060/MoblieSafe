@@ -7,7 +7,7 @@ import butterknife.ButterKnife.Finder;
 public class SetUp2Activity$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.SetUp2Activity target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131492890, "field 'sv_setup2_sim'");
+    view = finder.findRequiredView(source, 2131492895, "field 'sv_setup2_sim'");
     target.sv_setup2_sim = (com.itheima.mobliesafe.ui.SettingView) view;
   }
 
