@@ -3,20 +3,24 @@ package com.itheima.mobliesafe.db.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.itheima.mobliesafe.db.WatchDogOpenHelper;
 
 public class WatchDogDao {
 	
 	private WatchDogOpenHelper watchDogOpenHelper;
+	private Context context;
 	
 	//在构造函数中获取BlackNumOpenHlper
 	public WatchDogDao(Context context){
 		watchDogOpenHelper = new WatchDogOpenHelper(context);
+		this.context = context;
 	}
 	
 	//增删改查
@@ -27,17 +31,23 @@ public class WatchDogDao {
 	 * @param mode
 	 */
 	public void addLockApp(String packageName){
-//		synchronized (b) {
-			//1.获取数据库
-			SQLiteDatabase database = watchDogOpenHelper.getWritableDatabase();
-			//2.添加操作
-			//ContentValues :　添加的数据
-			ContentValues values = new ContentValues();
-			values.put("packagename", packageName);
-			database.insert(WatchDogOpenHelper.DB_NAME, null, values);
-			//3.关闭数据库
-			database.close();
-//		}
+		//1.获取数据库
+		SQLiteDatabase database = watchDogOpenHelper.getWritableDatabase();
+		//2.添加操作
+		//ContentValues :　添加的数据
+		ContentValues values = new ContentValues();
+		values.put("packagename", packageName);
+		database.insert(WatchDogOpenHelper.DB_NAME, null, values);
+		
+		//通知内容观察者数据库变化了
+		ContentResolver contentResolver = context.getContentResolver();
+		//因为是我们自己的数据发生变化了,所以我们要自定义一个uri进行操作
+		Uri uri = Uri.parse("content://com.itheima.mobliesafe.lock.changed");
+		//通知内容观察者数据发生变化了
+		contentResolver.notifyChange(uri, null);
+		
+		//3.关闭数据库
+		database.close();
 	}
 	
 	/**
@@ -79,6 +89,14 @@ public class WatchDogDao {
 		//whereClause : 查询的条件
 		//whereArgs : 查询条件的参数
 		database.delete(WatchDogOpenHelper.DB_NAME, "packagename=?", new String[]{packagename});
+		
+		//通知内容观察者数据库变化了
+		ContentResolver contentResolver = context.getContentResolver();
+		//因为是我们自己的数据发生变化了,所以我们要自定义一个uri进行操作
+		Uri uri = Uri.parse("content://com.itheima.mobliesafe.lock.changed");
+		//通知内容观察者数据发生变化了
+		contentResolver.notifyChange(uri, null);
+		
 		//3.关闭数据库
 		database.close();
 	}

@@ -57,10 +57,8 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 	TextView tv_softmanager_rom;
 	
 	private List<AppInfo> list;
-	//用户程序集合
-	private List<AppInfo> userappinfo;
-	//系统程序的集合
-	private List<AppInfo> systemappinfo;
+	private List<AppInfo> userappinfo;//用户程序集合
+	private List<AppInfo> systemappinfo;//系统程序的集合
 	
 	private AppInfo appInfo;
 	private PopupWindow popupWindow;

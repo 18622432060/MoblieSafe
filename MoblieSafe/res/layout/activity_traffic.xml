@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#8866ff00"
+            android:gravity="center_horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="流量统计"
+            android:textSize="22sp" />
+    </RelativeLayout>
+    <!-- layout_gravity : 在布局中决定控件存在位置 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:background="#ff0000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:background="#0000ff" />
+    
+<!--     handle :  抽屉的把手 -->
+<!--     content : 抽屉的内容 -->
+<!--     <SlidingDrawer -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:content="@+id/content" -->
+<!--         android:handle="@+id/handle" -->
+<!--         android:orientation="vertical" > -->
+
+<!--         <LinearLayout -->
+<!--             android:id="@+id/handle" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" > -->
+<!--             <ImageView -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:src="@drawable/dead_by_daylight" /> -->
+<!--         </LinearLayout> -->
+
+<!--         <LinearLayout -->
+<!--             android:id="@+id/content" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:background="#ff0000" /> -->
+<!--     </SlidingDrawer> -->
+
+</android.support.v4.widget.DrawerLayout>

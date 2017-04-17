@@ -71,6 +71,17 @@ public class WatchDogService extends Service {
 		// 时时刻刻监听用户打开的程序
 		// activity都是存放在任务栈中的,一个应用只有一个任务栈
 		final ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+		list = watchDogDao.querAllLockApp();
+		// 先将数据库中的数据,查询存放到内存,然后再把数据从内存中获取出来进行操作
+		// 当数据库变化的时候重新更新内存中的数据,当数据库变化的时候通知内容观察者数据库变化了,然后在内容观察者中去更新最新的数据
+		Uri uri = Uri.parse("content://com.itheima.mobliesafe.lock.changed");
+		// notifyForDescendents:匹配规则,true:精确匹配 false:模糊匹配
+		getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
+			public void onChange(boolean selfChange) {
+				System.out.println(selfChange+"AAAAAAAAA");
+				list = watchDogDao.querAllLockApp();// 更新数据
+			};
+		});
 		// 计数器
 		timer = new Timer();
 		// 执行操作
@@ -80,17 +91,6 @@ public class WatchDogService extends Service {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				// 先将数据库中的数据,查询存放到内存,然后再把数据从内存中获取出来进行操作
-				// 当数据库变化的时候重新更新内存中的数据,当数据库变化的时候通知内容观察者数据库变化了,然后在内容观察者中去更新最新的数据
-				Uri uri = Uri.parse("content://com.itheima.mobliesafe.lock.changed");
-				// notifyForDescendents:匹配规则,true:精确匹配 false:模糊匹配
-				getContentResolver().registerContentObserver(uri, true, new ContentObserver(null) {
-					public void onChange(boolean selfChange) {
-						// 更新数据
-						list = watchDogDao.querAllLockApp();
-					};
-				});
-				list = watchDogDao.querAllLockApp();
 				// 监听操作
 				// 监听用户打开了哪些任务栈,打开哪些应用
 				// 获取正在运行的任务栈,如果任务栈运行,就表示应用打开过

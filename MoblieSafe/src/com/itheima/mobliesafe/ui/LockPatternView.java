@@ -51,7 +51,6 @@ import com.itheima.mobliesafe.R;
  * "correct" states.
  */
 public class LockPatternView extends View {
-   // private static final String TAG = "LockPatternView";
     // Aspect to use when rendering this view
     private static final int ASPECT_SQUARE = 0; // View will be the minimum of width/height
     private static final int ASPECT_LOCK_WIDTH = 1; // Fixed width; height will be minimum of (w,h)
@@ -63,7 +62,7 @@ public class LockPatternView extends View {
     private Paint mPaint = new Paint();
     private Paint mPathPaint = new Paint();
 
-    // TODO: make this common with PhoneWindow
+    //make this common with PhoneWindow
     static final int STATUS_BAR_HEIGHT = 25;
 
     /**
@@ -100,7 +99,7 @@ public class LockPatternView extends View {
     private boolean mEnableHapticFeedback = true;
     private boolean mPatternInProgress = false;
 
-    private float mDiameterFactor = 0.10f; // TODO: move to attrs
+    private float mDiameterFactor = 0.10f; //move to attrs
     private final int mStrokeAlpha = 128;
     private float mHitFactor = 0.6f;
 
@@ -260,7 +259,7 @@ public class LockPatternView extends View {
 
         mPathPaint.setAntiAlias(true);
         mPathPaint.setDither(true);
-        mPathPaint.setColor(Color.WHITE);   // TODO this should be from the style
+        mPathPaint.setColor(Color.WHITE);   //  this should be from the style
         mPathPaint.setAlpha(mStrokeAlpha);
         mPathPaint.setStyle(Paint.Style.STROKE);
         mPathPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -902,7 +901,7 @@ public class LockPatternView extends View {
                 mInProgressX = centerX + dx;
                 mInProgressY = centerY + dy;
             }
-            // TODO: Infinite loop here...
+            //Infinite loop here...
             invalidate();
         }
 
@@ -928,7 +927,7 @@ public class LockPatternView extends View {
             }
         }
 
-        // TODO: the path should be created and cached every time we hit-detect a cell
+        //  the path should be created and cached every time we hit-detect a cell
         // only the last segment of the path should be computed here
         // draw the path of the pattern (unless the user is in progress, and
         // we are in stealth mode)
@@ -1169,15 +1168,5 @@ public class LockPatternView extends View {
             dest.writeValue(mTactileFeedbackEnabled);
         }
 
-//        public static final Parcelable.Creator<SavedState> CREATOR =
-//                new Creator<SavedState>() {
-//                    public SavedState createFromParcel(Parcel in) {
-//                        return new SavedState(in);
-//                    }
-//
-//                    public SavedState[] newArray(int size) {
-//                        return new SavedState[size];
-//                    }
-//                };
     }
 }
