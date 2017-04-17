@@ -30,10 +30,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import com.itheima.mobliesafe.service.AddressService;
+import com.itheima.mobliesafe.service.BlackNumService;
+import com.itheima.mobliesafe.service.WatchDogService;
 import com.itheima.mobliesafe.utils.HttpHelper;
 import com.itheima.mobliesafe.utils.HttpHelper.HttpResult;
 import com.itheima.mobliesafe.utils.IOUtils;
 import com.itheima.mobliesafe.utils.PrefUtils;
+import com.itheima.mobliesafe.utils.StringUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -49,6 +52,9 @@ public class SpalshActivity extends Activity {
 	private static final int MSG_JSON_ERROR = 6;
 	private int MSG_CURRENT = 0;
 	
+	
+	private final static String KEY_LOCK_PWD = "lock_pwd";//加锁判断
+
 	@InjectView(R.id.tv_splash_versionname)
 	TextView tv_splash_versionname;
 	
@@ -67,10 +73,22 @@ public class SpalshActivity extends Activity {
 		tv_splash_versionname.setText("版本号:" + getVersionName());
 		new HttpTask().execute();//启动AsyncTask异步任务
 	    copyDb();
-	    //开启监听电话状态的服务
-	    Intent intent = new Intent(this,AddressService.class);
-	    startService(intent);
+		startService();
 	    shortcut();
+	}
+
+	private void startService() {
+		//开启监听电话状态的服务
+	    Intent intent1 = new Intent(this,AddressService.class);
+	    startService(intent1);
+	    //黑名单拦截
+		Intent intent2 = new Intent(this,BlackNumService.class);
+		startService(intent2);
+		if(!StringUtils.isEmpty(PrefUtils.getString(getApplicationContext(), KEY_LOCK_PWD,""))){
+			//软件锁
+			Intent intent3 = new Intent(this,WatchDogService.class);
+			startService(intent3);
+		}
 	}
 
 	/**
@@ -81,8 +99,8 @@ public class SpalshActivity extends Activity {
 			// 给桌面发送一个广播
 			Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 			// 设置属性
-			// 设置快捷方式名称
-			intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Dead by Daylight");
+			// 设置快捷方式名称 
+			intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,getResources().getString(R.string.app_name));
 			// 设置快捷方式的图标
 			Bitmap value = BitmapFactory.decodeResource(getResources(),R.drawable.dead_by_daylight);
 			intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, value);
@@ -93,7 +111,7 @@ public class SpalshActivity extends Activity {
 			intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent2);
 			sendBroadcast(intent);
 			//保存已经创建快捷方式的状态
-			PrefUtils.getBoolean(getApplicationContext(),"firstshortcut", false);
+			PrefUtils.setBoolean(getApplicationContext(),"firstshortcut", false);
 		}
 	}
 	

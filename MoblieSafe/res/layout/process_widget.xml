@@ -36,7 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10.0dip"
-            android:text="可用内存:224MB"
+            android:textSize="11sp"
+            android:text="内存使用 :500MB(未)+500MB(已)/1000MB(总)"
             android:textAppearance="@style/widget_text" />
     </LinearLayout>
 

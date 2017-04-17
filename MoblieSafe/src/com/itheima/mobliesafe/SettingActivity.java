@@ -15,6 +15,7 @@ import butterknife.InjectView;
 
 import com.itheima.mobliesafe.service.AddressService;
 import com.itheima.mobliesafe.service.BlackNumService;
+import com.itheima.mobliesafe.service.WatchDogService;
 import com.itheima.mobliesafe.ui.SettingClickView;
 import com.itheima.mobliesafe.ui.SettingView;
 import com.itheima.mobliesafe.utils.AdressUtils;
@@ -38,6 +39,14 @@ public class SettingActivity extends Activity implements TestObserver {
 	
 	@InjectView(R.id.sv_setting_blacknum)
 	SettingView sv_setting_blacknum;
+	
+	@InjectView(R.id.sv_setting_lock)
+	SettingView sv_setting_lock;
+	
+	@InjectView(R.id.sv_setting_locksetpwd)
+	SettingClickView sv_setting_locksetpwd;
+	
+	
 	private TextManager mDM;
 	
 	@Override
@@ -48,8 +57,25 @@ public class SettingActivity extends Activity implements TestObserver {
 		update();
 		changedbg();
 		location();
+		lockset();
 		mDM = TextManager.getInstance();
 		mDM.registerObserver(this);// 注册观察者, 监听状态和进度变化
+	}
+	
+	/**
+	 * 设置图形密码
+	 */
+	private void lockset() {
+		sv_setting_locksetpwd.setTitle("图案解锁密码");
+		sv_setting_locksetpwd.setDes("设置图案解锁密码");
+		sv_setting_locksetpwd.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//跳转到设置位置的界面
+				Intent intent = new Intent(SettingActivity.this,LockSetPwdActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	/**
@@ -210,7 +236,42 @@ public class SettingActivity extends Activity implements TestObserver {
 		super.onStart();
 		address();
 		blackNum();
+		lock();
 	}
+	
+	/**
+	 * 软件锁
+	 */
+	private void lock() {
+		// 动态的获取服务是否开启
+		if (AdressUtils.isRunningService("com.itheima.mobliesafe.service.WatchDogService",getApplicationContext())) {
+			// 开启服务
+			sv_setting_lock.setChecked(true);
+		} else {
+			// 关闭服务
+			sv_setting_lock.setChecked(false);
+		}
+		sv_setting_lock.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SettingActivity.this,WatchDogService.class);
+				// 根据checkbox的状态设置描述信息的状态
+				// isChecked() : 之前的状态
+				if (sv_setting_lock.isChecked()) {
+					// 关闭提示更新
+					stopService(intent);
+					// 更新checkbox的状态
+					sv_setting_lock.setChecked(false);
+				} else {
+					// 打开提示更新
+					startService(intent);
+					sv_setting_lock.setChecked(true);
+				}
+			}
+		});
+	}
+
 	
 	//activity不可见的时候调用
 	@Override

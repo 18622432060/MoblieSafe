@@ -3,12 +3,11 @@
     package="com.itheima.mobliesafe"
     android:versionCode="1"
     android:versionName="1.0" >
-
-    <!--
-     package :应用在系统中的唯一标示
-	versionCode : 版本号
-	versionName : 版本号的名称
-    -->
+    
+    
+    <!-- package :应用在系统中的唯一标示 -->
+    <!-- versionCode : 版本号 -->
+    <!-- versionName : 版本号的名称 -->
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -65,7 +64,14 @@
 		<activity android:name=".AddressActivity" />
 		<activity android:name=".CallSmsSafeActivity" />
 		<activity android:name=".SoftMangaerActivity" />
+		<activity android:name=".LockSetPwdActivity" android:launchMode="singleTop"/>
 		<activity android:name=".TaskManagerActivity" />
+<!-- 		    standard : 标准的启动模式 -->
+<!--         	singleTop : 如果activity在栈顶,直接使用 -->
+<!--         	singleTask : 如果任务栈中有activity的,之前的activity删除,将activity置顶 -->
+<!--         	singleInstance : 将activity单独存放一个任务栈中 -->
+<!--         	excludeFromRecents : 是否在最近列表中显示    true:不显示      false:显示,只有设置这个属性的activity运行了,这个属性才会生效 -->
+		<activity android:name=".WatchDogActivity" android:launchMode="singleInstance" android:excludeFromRecents="true"/>
 		<activity android:name=".DragViewActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:launchMode="singleTop"/><!--毛玻璃效果 -->
 		<receiver android:name="com.itheima.mobliesafe.receiver.BootCompleteReceiver">
 			<!-- priority : 广播接受者的优先级,值越大优先级越高,越先接收到广播 -->
@@ -104,6 +110,7 @@
         <service android:name="com.itheima.mobliesafe.service.AddressService"/>
         <service android:name="com.itheima.mobliesafe.service.BlackNumService"/>
         <service android:name="com.itheima.mobliesafe.service.WidgetService"/>
+        <service android:name="com.itheima.mobliesafe.service.WatchDogService"/>
         
     </application>
 </manifest>

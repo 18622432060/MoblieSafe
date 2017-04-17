@@ -24,6 +24,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import com.itheima.mobliesafe.bean.AppInfo;
+import com.itheima.mobliesafe.db.dao.WatchDogDao;
 import com.itheima.mobliesafe.engine.AppEngine;
 import com.itheima.mobliesafe.utils.AppUtil;
 import com.itheima.mobliesafe.utils.UIUtils;
@@ -63,11 +65,13 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 	private AppInfo appInfo;
 	private PopupWindow popupWindow;
 	private Myadapter myadapter;
+	private WatchDogDao watchDogDao;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_softmanager);
+		watchDogDao = new WatchDogDao(getApplicationContext());
 		ButterKnife.inject(this);
 		
 		//获取可用内存,获取都是kb
@@ -83,6 +87,52 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 		fillData();//加载数据
 		listviewOnscroll();
 		listviewItemClick();
+		listviewItemLongClick();
+	}
+	
+	/**
+	 * 长按点击事件
+	 */
+	private void listviewItemLongClick() {
+		lv_softmanager_application.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
+				System.out.println("长按点击事件");
+				//true if the callback consumed the long click, false otherwise
+				//true:表示执行  false:拦截
+				//加锁解锁的操作
+				//屏蔽用户和系统程序(..个)不能加锁解锁操作
+				if (position == 0 || position == userappinfo.size()+1) {
+					return true;
+				}
+				//获取数据
+				if (position <= userappinfo.size()) {
+					//用户程序
+					appInfo = userappinfo.get(position-1);
+				}else{
+					//系统程序
+					appInfo = systemappinfo.get(position - userappinfo.size() - 2);
+				}
+				//加锁解锁
+				ViewHolder viewHolder = (ViewHolder) view.getTag();
+				//判断应用有没有加锁,有的解锁,没有的加锁
+				if (watchDogDao.queryLockApp(appInfo.getPackagName())) {
+					//解锁操作
+					watchDogDao.deleteLockApp(appInfo.getPackagName());
+					viewHolder.iv_itemsoftmanager_islock.setImageResource(R.drawable.unlock);
+				}else{
+					//加锁操作
+					//判断如果是当前应用程序,就不要加锁
+					if (!appInfo.getPackagName().equals(getPackageName())) {
+						watchDogDao.addLockApp(appInfo.getPackagName());
+						viewHolder.iv_itemsoftmanager_islock.setImageResource(R.drawable.lock);
+					}else{
+//						Toast.makeText(getApplicationContext(), "当前的应用程序不能加锁", Toast.LENGTH_SHORT).show();
+					}
+				}
+				return true;
+			}
+		});
 	}
 	
 	/**
@@ -300,6 +350,7 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 				viewHolder.tv_softmanager_name = (TextView) view.findViewById(R.id.tv_softmanager_name);
 				viewHolder.tv_softmanager_issd = (TextView) view.findViewById(R.id.tv_softmanager_issd);
 				viewHolder.tv_softmanager_version = (TextView) view.findViewById(R.id.tv_softmanager_version);
+				viewHolder.iv_itemsoftmanager_islock = (ImageView) view.findViewById(R.id.iv_itemsoftmanager_islock);
 				//将viewholer和view对象绑定
 				view.setTag(viewHolder);
 			}
@@ -313,6 +364,9 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 				//系统程序
 				appInfo = systemappinfo.get(position - userappinfo.size() - 2);
 			}
+			if (appInfo.getPackagName().equals(getPackageName())) {
+				viewHolder.iv_itemsoftmanager_islock.setVisibility(ImageView.INVISIBLE);
+			}
 			//设置显示数据,      空指针出现的情况 null.方法    参数为null
 			viewHolder.iv_itemsoftmanage_icon.setImageDrawable(appInfo.getIcon());
 			viewHolder.tv_softmanager_name.setText(appInfo.getName());
@@ -323,13 +377,21 @@ public class SoftMangaerActivity extends Activity implements OnClickListener{
 				viewHolder.tv_softmanager_issd.setText("手机内存");
 			}
 			viewHolder.tv_softmanager_version.setText(appInfo.getVersionName());
+			//判断应用程序是加锁还是解锁
+			if (watchDogDao.queryLockApp(appInfo.getPackagName())) {
+				//加锁
+				viewHolder.iv_itemsoftmanager_islock.setImageResource(R.drawable.lock);
+			}else{
+				//解锁
+				viewHolder.iv_itemsoftmanager_islock.setImageResource(R.drawable.unlock);
+			}
 			return view;
 		}
 		
 	}
 	
 	static class ViewHolder{
-		ImageView iv_itemsoftmanage_icon;
+		ImageView iv_itemsoftmanage_icon,iv_itemsoftmanager_islock;
 		TextView tv_softmanager_name,tv_softmanager_issd,tv_softmanager_version;
 	}
 	

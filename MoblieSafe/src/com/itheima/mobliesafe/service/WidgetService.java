@@ -22,6 +22,7 @@ import com.itheima.mobliesafe.R;
 import com.itheima.mobliesafe.receiver.MyWidget;
 import com.itheima.mobliesafe.utils.TaskUtil;
 
+@SuppressWarnings("deprecation")
 public class WidgetService extends Service {
 
 	private AppWidgetManager appWidgetManager;
@@ -29,94 +30,100 @@ public class WidgetService extends Service {
 	private Timer timer;
 	private ScreenOffReceiver screenOffReceiver;
 	private ScreenOnReceiver screenOnReceiver;
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		//更新桌面小控件
-		//注册清理进程广播接受者
-		//1.广播接受者
+		// 更新桌面小控件
+		// 注册清理进程广播接受者
+		// 1.广播接受者
 		widgetReceiver = new WidgetReceiver();
-		//2.设置接受的广播事件
+		// 2.设置接受的广播事件
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("aa.bb.cc");
-		//3.注册广播接受者
+		// 3.注册广播接受者
 		registerReceiver(widgetReceiver, intentFilter);
-		
-		//注册锁屏的广播接受者
+
+		// 注册锁屏的广播接受者
 		screenOffReceiver = new ScreenOffReceiver();
-		//设置接受广播事件
+		// 设置接受广播事件
 		IntentFilter screenoffIntentfilter = new IntentFilter();
 		screenoffIntentfilter.addAction(Intent.ACTION_SCREEN_OFF);
 		registerReceiver(screenOffReceiver, screenoffIntentfilter);
-		
-		//注册解锁的广播接受者
+
+		// 注册解锁的广播接受者
 		screenOnReceiver = new ScreenOnReceiver();
 		IntentFilter screenOnIntentFilter = new IntentFilter();
 		screenOnIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
 		registerReceiver(screenOnReceiver, screenOnIntentFilter);
-		
-		//widget的管理者
+
+		// widget的管理者
 		appWidgetManager = AppWidgetManager.getInstance(this);
-		//更新操作
+		// 更新操作
 		updateWidgets();
 	}
-	
+
 	/**
 	 * 清理进程的广播接受者
+	 * 
 	 * @author Administrator
-	 *
+	 * 
 	 */
-	private class WidgetReceiver extends BroadcastReceiver{
+	private class WidgetReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			//清理进程
+			// 清理进程
 			killProcess();
 		}
 	}
+
 	/**
 	 * 锁屏的广播接受者
+	 * 
 	 * @author Administrator
-	 *
+	 * 
 	 */
-	private class ScreenOffReceiver extends BroadcastReceiver{
+	private class ScreenOffReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			System.out.println("锁屏了.....");
-			//清理进程
+			// 清理进程
 			killProcess();
-			//停止更新
+			// 停止更新
 			stopUpdates();
 		}
 	}
+
 	/**
 	 * 解锁的广播接受者
+	 * 
 	 * @author Administrator
-	 *
+	 * 
 	 */
-	private class ScreenOnReceiver extends BroadcastReceiver{
+	private class ScreenOnReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			updateWidgets();
 		}
 	}
-	
+
 	/**
 	 * 清理进程
 	 */
 	public void killProcess() {
 		ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		//获取正在运行进程
+		// 获取正在运行进程
 		List<RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
 		for (RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
-			//判断我们的应用进程不能被清理
+			// 判断我们的应用进程不能被清理
 			if (!runningAppProcessInfo.processName.equals(getPackageName())) {
 				am.killBackgroundProcesses(runningAppProcessInfo.processName);
 			}
@@ -126,9 +133,9 @@ public class WidgetService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		//停止更新widget
+		// 停止更新widget
 		stopUpdates();
-		//注销清理进程的广播接受者
+		// 注销清理进程的广播接受者
 		if (widgetReceiver != null) {
 			unregisterReceiver(widgetReceiver);
 			widgetReceiver = null;
@@ -142,7 +149,7 @@ public class WidgetService extends Service {
 			screenOnReceiver = null;
 		}
 	}
-	
+
 	/**
 	 * 停止更新
 	 */
@@ -152,49 +159,55 @@ public class WidgetService extends Service {
 			timer = null;
 		}
 	}
-	
+
 	/**
 	 * 更新widget
 	 */
 	private void updateWidgets() {
-		//计数器
+		// 计数器
 		timer = new Timer();
-		//执行操作
-		//task : 要执行操作
-		//when : 延迟的时间
-		//period : 每次执行的间隔时间
+		// 执行操作
+		// task : 要执行操作
+		// when : 延迟的时间
+		// period : 每次执行的间隔时间
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
 				System.out.println("widget更新了......");
-				//更新操作
-				//获取组件的标示
+				// 更新操作
+				// 获取组件的标示
 				ComponentName provider = new ComponentName(WidgetService.this, MyWidget.class);
-				//获取远程布局
-				//packageName : 应用的包名
-				//layoutId :widget布局文件
+				// 获取远程布局
+				// packageName : 应用的包名
+				// layoutId :widget布局文件
 				RemoteViews views = new RemoteViews(getPackageName(), R.layout.process_widget);
-				//远程布局不能通过findviewbyid获取初始化控件
-				//更新布局文件中相应控件的值
-				//viewId :更新控件的id
-				//text : 更新的内容
-				views.setTextViewText(R.id.process_count, "正在运行软件:"+TaskUtil.getProcessCount(WidgetService.this));
-				views.setTextViewText(R.id.process_memory, "可用内存:"+Formatter.formatFileSize(WidgetService.this, TaskUtil.getAvailableRam(WidgetService.this)));
-				
-				//按钮点击事件
+				// 远程布局不能通过findviewbyid获取初始化控件
+				// 更新布局文件中相应控件的值
+				// viewId :更新控件的id
+				// text : 更新的内容
+				String totalRam = Formatter.formatFileSize(WidgetService.this, TaskUtil.getTotalRam(WidgetService.this));// 总能存
+				String ram = Formatter.formatFileSize(WidgetService.this, TaskUtil.getAvailableRam(WidgetService.this));// 剩余内存
+				String useRam = Formatter.formatFileSize(WidgetService.this, TaskUtil.getTotalRam(WidgetService.this) - TaskUtil.getAvailableRam(WidgetService.this));// String.valueOf(Integer.valueOf(totalRam)
+																																										// -
+																																										// Integer.valueOf(ram))
+																																										// ;//已用内存
+				views.setTextViewText(R.id.process_count, "正在运行软件:" + TaskUtil.getProcessCount(WidgetService.this));
+				views.setTextViewText(R.id.process_memory, "内存使用 :" + ram + "(未)+" + useRam + "(已)/" + totalRam+"(总)");
+
+				// 按钮点击事件
 				Intent intent = new Intent();
-				intent.setAction("aa.bb.cc");//设置要发送的广播,aa.bb.cc:自定义的广播事件
-				//sendBroadcast(intent);
-				//通过发送一个广播去表示要执行清理操作,通过接受发送的广播执行清理操作
-				//flags : 指定信息的标签
+				intent.setAction("aa.bb.cc");// 设置要发送的广播,aa.bb.cc:自定义的广播事件
+				// sendBroadcast(intent);
+				// 通过发送一个广播去表示要执行清理操作,通过接受发送的广播执行清理操作
+				// flags : 指定信息的标签
 				PendingIntent pendingIntent = PendingIntent.getBroadcast(WidgetService.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-				//viewId : 点击的控件的id
-				//pendingIntent : 延迟意图  包含一个intent意图,当点击的才去执行这个意图,不点击就不执行意图
+				// viewId : 点击的控件的id
+				// pendingIntent : 延迟意图 包含一个intent意图,当点击的才去执行这个意图,不点击就不执行意图
 				views.setOnClickPendingIntent(R.id.btn_clear, pendingIntent);
-				//更新操作
+				// 更新操作
 				appWidgetManager.updateAppWidget(provider, views);
 			}
 		}, 2000, 2000);
 	}
-		
+
 }
