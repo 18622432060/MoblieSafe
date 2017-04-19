@@ -111,9 +111,7 @@ public class CacheFragment extends Fragment {
 					//设置进度条最大进度和当前进度
 					count++;
 					pb_cachefragment_progressbar.setProgress(count);
-					
 					//获取缓存大小
-					
 					//反射获取缓存
 					try {
 						Class<?> loadClass = getActivity().getClass().getClassLoader().loadClass("android.content.pm.PackageManager");
