@@ -231,7 +231,6 @@ public class HomeActivity extends Activity {
 		Button btn_cancle = (Button) view.findViewById(R.id.btn_cancle);
 		ImageView iv_enterpassword_hide = (ImageView) view.findViewById(R.id.iv_enterpassword_hide);
 		iv_enterpassword_hide.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				//隐藏显示密码
