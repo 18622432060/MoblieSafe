@@ -114,8 +114,6 @@ public class HomeActivity extends Activity {
 		// 设置条目的样式
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-//			TextView textView = new TextView(getApplicationContext());
-//			textView.setText("第"+position+"个条目");//position : 代表是条目的位置,从0开始   0-8
 			//将布局文件转化成view对象
 			View view = View.inflate(getApplicationContext(), R.layout.item_home, null);
 			ButterKnife.inject(this,view);
@@ -139,7 +137,9 @@ public class HomeActivity extends Activity {
 		}
 
 	}
+	
 	AlertDialog.Builder builder = null;
+	
 	/**
 	 * 设置密码对话框
 	 */
