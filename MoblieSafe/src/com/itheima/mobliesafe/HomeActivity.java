@@ -139,7 +139,7 @@ public class HomeActivity extends Activity {
 	}
 	
 	AlertDialog.Builder builder = null;
-	
+
 	/**
 	 * 设置密码对话框
 	 */
@@ -160,7 +160,6 @@ public class HomeActivity extends Activity {
 		Button btn_cancle = (Button) view.findViewById(R.id.btn_cancle);
 		//设置确定,取消按钮的点击事件
 		btn_ok.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				//设置密码
