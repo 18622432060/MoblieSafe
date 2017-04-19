@@ -39,13 +39,6 @@ public class AToolsActivity extends Activity {
 	 * @param v
 	 */
 	public void backupsms(View v) {
-		// progressdialog是可以在子线程中更新
-		// ProgressDialog progressDialog = new ProgressDialog(this);
-		// progressDialog.setCancelable(false);//不能取消
-		// progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		// /*progressDialog.setMax(max);//设置最大进度
-		// progressDialog.setProgress(value);//设置当前进度*/
-		// progressDialog.show();
 		// 读取短信
 		// 备份短信
 		new AsyncTask<Void, Void, Void>() {
