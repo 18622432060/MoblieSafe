@@ -7,9 +7,9 @@ import butterknife.ButterKnife.Finder;
 public class ContactActivity$Myadapter$$ViewInjector {
   public static void inject(Finder finder, final com.itheima.mobliesafe.ContactActivity.Myadapter target, Object source) {
     View view;
-    view = finder.findRequiredView(source, 2131492929, "field 'tv_itemcontact_name'");
+    view = finder.findRequiredView(source, 2131492937, "field 'tv_itemcontact_name'");
     target.tv_itemcontact_name = (android.widget.TextView) view;
-    view = finder.findRequiredView(source, 2131492930, "field 'tv_itemcontact_phone'");
+    view = finder.findRequiredView(source, 2131492938, "field 'tv_itemcontact_phone'");
     target.tv_itemcontact_phone = (android.widget.TextView) view;
   }
 

@@ -31,6 +31,10 @@
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     
     <application
         android:name="com.itheima.mobliesafe.MoblieSafeApplication"
@@ -65,8 +69,8 @@
 		<activity android:name=".CallSmsSafeActivity" />
 		<activity android:name=".SoftMangaerActivity" />
 		<activity android:name=".TrafficActivity" />
-		<activity android:name=".AntivirusActivity" />
-		<activity android:name=".LockSetPwdActivity" android:launchMode="singleTop"/>
+		<activity android:name=".ClearCacheActivity" />
+ 		<activity android:name=".LockSetPwdActivity" android:launchMode="singleTop"/>
 		<activity android:name=".TaskManagerActivity" />
 <!-- 		    standard : 标准的启动模式 -->
 <!--         	singleTop : 如果activity在栈顶,直接使用 -->
