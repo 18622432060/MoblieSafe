@@ -274,7 +274,6 @@ public class HomeActivity extends Activity {
 		});
 		
 		btn_cancle.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				//隐藏对话框
