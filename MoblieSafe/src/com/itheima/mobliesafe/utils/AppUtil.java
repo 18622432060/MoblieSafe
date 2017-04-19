@@ -7,6 +7,7 @@ import android.os.StatFs;
 
 @SuppressWarnings({ "deprecation", "unused" })
 public class AppUtil {
+	
 	/**
 	 * 获取SD卡可用空间
 	 */

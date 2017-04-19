@@ -9,6 +9,7 @@ import java.io.IOException;
  *
  */
 public class IOUtils {
+	
 	/** 关闭流 */
 	public static boolean close(Closeable io) {
 		if (io != null) {
